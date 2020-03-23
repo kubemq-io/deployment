@@ -40,21 +40,21 @@ func CreateDeployment(name, namespace string) (*Deployment, error) {
 	}
 	dep.yamls = append(dep.yamls, ns.String())
 
-	role := operator.NewRole().SetDefault(namespace, name)
+	role := operator.NewRole().SetDefault(namespace, name+"-role")
 	dep.Role, err = role.Get()
 	if err != nil {
 		return nil, fmt.Errorf("error create deployment, role error: %s", err.Error())
 	}
 	dep.yamls = append(dep.yamls, role.String())
 
-	roleBinding := operator.NewRoleBinding().SetDefault(namespace, name)
+	roleBinding := operator.NewRoleBinding().SetDefault(namespace, name+"-role-binding")
 	dep.RoleBinding, err = roleBinding.Get()
 	if err != nil {
 		return nil, fmt.Errorf("error create deployment, role binding error: %s", err.Error())
 	}
 	dep.yamls = append(dep.yamls, roleBinding.String())
 
-	serviceAccount := operator.NewServiceAccount().SetDefault(namespace, name)
+	serviceAccount := operator.NewServiceAccount().SetDefault(namespace, name+"-service-account")
 	dep.ServiceAccount, err = serviceAccount.Get()
 	if err != nil {
 		return nil, fmt.Errorf("error create deployment, service account error: %s", err.Error())
@@ -77,7 +77,7 @@ func CreateDeployment(name, namespace string) (*Deployment, error) {
 	dep.yamls = append(dep.yamls, kubemqDashboard.String())
 	dep.CRDs = append(dep.CRDs, kubemqDashboardCrd)
 
-	operator := operator.NewOperator().SetDefault(namespace, name)
+	operator := operator.NewOperator().SetDefault(namespace, name+"-operator")
 	dep.Deployment, err = operator.Get()
 	if err != nil {
 		return nil, fmt.Errorf("error create deployment, operator error: %s", err.Error())
