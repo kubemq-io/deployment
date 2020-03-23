@@ -53,7 +53,6 @@ func CreateDeployment(namespace string) (*Deployment, error) {
 		return nil, fmt.Errorf("error create deployment, role binding error: %s", err.Error())
 	}
 	dep.yamls = append(dep.yamls, roleBinding.String())
-
 	serviceAccount := operator.NewServiceAccount().SetDefault(namespace, "kubemq-service-account")
 	dep.ServiceAccount, err = serviceAccount.Get()
 	if err != nil {
