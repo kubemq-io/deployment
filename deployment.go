@@ -22,7 +22,7 @@ type Deployment struct {
 	yamls []string
 }
 
-func CreateDeployment(name, namespace string) (*Deployment, error) {
+func CreateDeployment(namespace string) (*Deployment, error) {
 	dep := &Deployment{
 		CRDs:           nil,
 		Namespace:      nil,
@@ -40,21 +40,21 @@ func CreateDeployment(name, namespace string) (*Deployment, error) {
 	}
 	dep.yamls = append(dep.yamls, ns.String())
 
-	role := operator.NewRole().SetDefault(namespace, name+"-role")
+	role := operator.NewRole().SetDefault(namespace, "kubemq-role")
 	dep.Role, err = role.Get()
 	if err != nil {
 		return nil, fmt.Errorf("error create deployment, role error: %s", err.Error())
 	}
 	dep.yamls = append(dep.yamls, role.String())
 
-	roleBinding := operator.NewRoleBinding().SetDefault(namespace, name+"-role-binding")
+	roleBinding := operator.NewRoleBinding().SetDefault(namespace, "kubemq-role-binding")
 	dep.RoleBinding, err = roleBinding.Get()
 	if err != nil {
 		return nil, fmt.Errorf("error create deployment, role binding error: %s", err.Error())
 	}
 	dep.yamls = append(dep.yamls, roleBinding.String())
 
-	serviceAccount := operator.NewServiceAccount().SetDefault(namespace, name+"-service-account")
+	serviceAccount := operator.NewServiceAccount().SetDefault(namespace, "kubemq-service-account")
 	dep.ServiceAccount, err = serviceAccount.Get()
 	if err != nil {
 		return nil, fmt.Errorf("error create deployment, service account error: %s", err.Error())
@@ -77,7 +77,7 @@ func CreateDeployment(name, namespace string) (*Deployment, error) {
 	dep.yamls = append(dep.yamls, kubemqDashboard.String())
 	dep.CRDs = append(dep.CRDs, kubemqDashboardCrd)
 
-	operator := operator.NewOperator().SetDefault(namespace, name+"-operator")
+	operator := operator.NewOperator().SetDefault(namespace, "kubemq-operator")
 	dep.Deployment, err = operator.Get()
 	if err != nil {
 		return nil, fmt.Errorf("error create deployment, operator error: %s", err.Error())
