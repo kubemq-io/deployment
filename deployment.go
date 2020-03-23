@@ -76,7 +76,7 @@ func CreateDeployment(namespace string) (*Deployment, error) {
 	dep.yamls = append(dep.yamls, kubemqDashboard.String())
 	dep.CRDs = append(dep.CRDs, kubemqDashboardCrd)
 
-	operator := operator.NewOperator().SetDefault(namespace, "kubemq-operator")
+	operator := operator.NewOperator().SetDefault(namespace, "kubemq-operator", "kubemq-service-account")
 	dep.Deployment, err = operator.Get()
 	if err != nil {
 		return nil, fmt.Errorf("error create deployment, operator error: %s", err.Error())

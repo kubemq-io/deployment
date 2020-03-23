@@ -22,7 +22,7 @@ spec:
       labels:
         name: {{.Name}}
     spec:
-      serviceAccountName: {{.Name}}
+      serviceAccountName: {{.ServiceAccountName}}
       containers:
         - name: {{.Name}}
           image: {{.Image}}
@@ -61,6 +61,7 @@ type Operator struct {
 	GrafanaImage                   string
 	KubemqDashboardDashboardSource string
 	LicenseMode                    string
+	ServiceAccountName             string
 	*appsv1.Deployment
 }
 
@@ -68,7 +69,7 @@ func NewOperator() *Operator {
 	return &Operator{}
 }
 
-func (o *Operator) SetDefault(namespace, name string) *Operator {
+func (o *Operator) SetDefault(namespace, name, serviceAccountName string) *Operator {
 
 	o.Name = name
 	o.Namespace = namespace
@@ -79,6 +80,7 @@ func (o *Operator) SetDefault(namespace, name string) *Operator {
 	o.KubemqDashboardDashboardSource = "https://raw.githubusercontent.com/kubemq-io/kubemq-dashboard/master/dashboard.json"
 	o.LicenseMode = "COMMUNITY"
 	o.Deployment = nil
+	o.ServiceAccountName = serviceAccountName
 	return o
 }
 
