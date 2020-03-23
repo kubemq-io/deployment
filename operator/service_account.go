@@ -39,13 +39,7 @@ func (sa *ServiceAccount) Object() runtime.Object {
 	return sa.ServiceAccount
 }
 func (sa *ServiceAccount) String() string {
-	if sa.ServiceAccount != nil {
-		data, err := yaml.Marshal(sa.ServiceAccount)
-		if err != nil {
-			return ""
-		}
-		return string(data)
-	}
+
 	data, err := sa.Spec()
 	if err != nil {
 		return ""

@@ -390,13 +390,6 @@ func (c *KubemqCluster) Object() runtime.Object {
 	return c.CustomResourceDefinition
 }
 func (c *KubemqCluster) String() string {
-	if c.CustomResourceDefinition != nil {
-		data, err := yaml.Marshal(c.CustomResourceDefinition)
-		if err != nil {
-			return ""
-		}
-		return string(data)
-	}
 	data, err := c.Spec()
 	if err != nil {
 		return ""

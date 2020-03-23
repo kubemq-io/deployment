@@ -45,13 +45,7 @@ func (rb *RoleBinding) Object() runtime.Object {
 	return rb.RoleBinding
 }
 func (rb *RoleBinding) String() string {
-	if rb.RoleBinding != nil {
-		data, err := yaml.Marshal(rb.RoleBinding)
-		if err != nil {
-			return ""
-		}
-		return string(data)
-	}
+
 	data, err := rb.Spec()
 	if err != nil {
 		return ""

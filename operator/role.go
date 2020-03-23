@@ -149,13 +149,7 @@ func (r *Role) Object() runtime.Object {
 	return r.Role
 }
 func (r *Role) String() string {
-	if r.Role != nil {
-		data, err := yaml.Marshal(r.Role)
-		if err != nil {
-			return ""
-		}
-		return string(data)
-	}
+
 	data, err := r.Spec()
 	if err != nil {
 		return ""

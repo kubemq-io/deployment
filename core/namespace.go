@@ -35,13 +35,6 @@ func (ns *Namespace) Object() runtime.Object {
 	return ns.Namespace
 }
 func (ns *Namespace) String() string {
-	if ns.Namespace != nil {
-		data, err := yaml.Marshal(ns.Namespace)
-		if err != nil {
-			return ""
-		}
-		return string(data)
-	}
 	data, err := ns.Spec()
 	if err != nil {
 		return ""

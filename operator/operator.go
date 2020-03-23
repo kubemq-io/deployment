@@ -91,13 +91,7 @@ func (o *Operator) Object() runtime.Object {
 	return o.Deployment
 }
 func (o *Operator) String() string {
-	if o.Deployment != nil {
-		data, err := yaml.Marshal(o.Deployment)
-		if err != nil {
-			return ""
-		}
-		return string(data)
-	}
+
 	data, err := o.Spec()
 	if err != nil {
 		return ""
