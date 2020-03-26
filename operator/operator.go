@@ -75,7 +75,7 @@ func (o *Operator) SetDefault(namespace, name, serviceAccountName string) *Opera
 	o.Namespace = namespace
 	o.Image = "docker.io/kubemq/kubemq-operator:latest"
 	o.KubemqImage = "docker.io/kubemq/kubemq:latest"
-	o.PrometheusImage = "prom/prometheus"
+	o.PrometheusImage = "prom/prometheus:latest"
 	o.GrafanaImage = "grafana/grafana:latest"
 	o.KubemqDashboardDashboardSource = "https://raw.githubusercontent.com/kubemq-io/kubemq-dashboard/master/dashboard.json"
 	o.LicenseMode = "COMMUNITY"
