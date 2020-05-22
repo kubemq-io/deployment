@@ -18,19 +18,21 @@ type Deployment struct {
 	*appsv1.Deployment
 	*rbac.Role
 	*rbac.RoleBinding
-	*apiv1.ServiceAccount
-	yamls []string
+	OperatorServiceAccount      *apiv1.ServiceAccount
+	KubeMQClusterServiceAccount *apiv1.ServiceAccount
+	yamls                       []string
 }
 
 func CreateDeployment(namespace string) (*Deployment, error) {
 	dep := &Deployment{
-		CRDs:           nil,
-		Namespace:      nil,
-		Deployment:     nil,
-		Role:           nil,
-		RoleBinding:    nil,
-		ServiceAccount: nil,
-		yamls:          []string{},
+		CRDs:                        nil,
+		Namespace:                   nil,
+		Deployment:                  nil,
+		Role:                        nil,
+		RoleBinding:                 nil,
+		OperatorServiceAccount:      nil,
+		KubeMQClusterServiceAccount: nil,
+		yamls:                       []string{},
 	}
 	var err error
 	ns := core.NewNamespace().SetDefault(namespace)
@@ -53,12 +55,19 @@ func CreateDeployment(namespace string) (*Deployment, error) {
 		return nil, fmt.Errorf("error create deployment, role binding error: %s", err.Error())
 	}
 	dep.yamls = append(dep.yamls, roleBinding.String())
-	serviceAccount := operator.NewServiceAccount().SetDefault(namespace, "kubemq-operator")
-	dep.ServiceAccount, err = serviceAccount.Get()
+	operatorSA := operator.NewServiceAccount().SetDefault(namespace, "kubemq-operator")
+	dep.OperatorServiceAccount, err = operatorSA.Get()
 	if err != nil {
 		return nil, fmt.Errorf("error create deployment, service account error: %s", err.Error())
 	}
-	dep.yamls = append(dep.yamls, serviceAccount.String())
+	dep.yamls = append(dep.yamls, operatorSA.String())
+
+	kubemqSA := operator.NewServiceAccount().SetDefault(namespace, "kubemq-cluster")
+	dep.KubeMQClusterServiceAccount, err = kubemqSA.Get()
+	if err != nil {
+		return nil, fmt.Errorf("error create deployment, service account error: %s", err.Error())
+	}
+	dep.yamls = append(dep.yamls, kubemqSA.String())
 
 	kubemqCluster := crd.NewKubemqCluster().SetDefault()
 	kubemqClusterCrd, err := kubemqCluster.Get()
@@ -103,7 +112,10 @@ func (b *Deployment) IsValid() error {
 	if b.RoleBinding == nil {
 		return fmt.Errorf("no role binding exsits or defined")
 	}
-	if b.ServiceAccount == nil {
+	if b.OperatorServiceAccount == nil {
+		return fmt.Errorf("no service account exsits or defined")
+	}
+	if b.KubeMQClusterServiceAccount == nil {
 		return fmt.Errorf("no service account exsits or defined")
 	}
 	return nil
